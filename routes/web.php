@@ -16,3 +16,25 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/tifor',function(){
+    return "Hello Titip Informatika";
+});
+
+Route::redirect('/youtube',"/tifor");
+
+Route::fallback(function(){
+    return "404 by Titip Informatika";
+});
+
+Route::view("/hello","hello",['name'=>"Asep Riki"]);
+
+Route::get('/hello-lagi',function(){
+    return view("hello",["name"=>"Rendi Apriandi"]);
+});
+
+// view nested
+Route::view("/world","admin.profile",["name"=>"Asep Admn"]);
+Route::get("/world-lagi",function(){
+   return view("admin.hello",["name"=>"Rendi Apriandi"]);
+});
