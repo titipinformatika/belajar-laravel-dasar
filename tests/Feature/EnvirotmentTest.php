@@ -21,7 +21,7 @@ class EnvirotmentTest extends TestCase
     }
 
     function testDefaultEnv(){
-        $author = env("AUTHOR","Asep Riki");
+        $author = Env::get("AUTHOR","Asep Riki");
         $chanel = Env::get("CHANNEL","Titip Informatika");
 
         $this->assertEquals("Asep Riki", $author);

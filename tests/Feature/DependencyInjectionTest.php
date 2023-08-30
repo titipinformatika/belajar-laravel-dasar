@@ -7,6 +7,8 @@ use App\Data\Category;
 use App\Data\Foo;
 use App\Data\Person;
 use App\Data\Product;
+use App\Service\HelloService;
+use App\Service\HelloServiceIndonesia;
 use Tests\TestCase;
 
 class DependencyInjectionTest extends TestCase
@@ -24,7 +26,7 @@ class DependencyInjectionTest extends TestCase
     $foo1 = $this->app->make(Foo::class);
     $foo2 = $this->app->make(Foo::class);
     $this->assertEquals($foo1->foo(), $foo2->foo());
-    self::assertNotSame($foo1,$foo2);
+    self::assertSame($foo1,$foo2);
    }
 
    public function testBind(){
@@ -107,5 +109,42 @@ class DependencyInjectionTest extends TestCase
       $this->assertEquals("Hanphone",$product1->getCategoryName());
    }
 
+   function testDependencyInjectionClosure(){
+      $this->app->singleton(Category::class,function(){
+         return new Category("Tablet Pc");
+      });
+
+      $this->app->singleton(Product::class,function($app){
+         return new Product($app->make(Category::class));
+      });
+
+      $product1 = $this->app->make(Product::class);
+      $product2 = $this->app->make(Product::class);
+      self::assertSame($product1,$product2);
+
+      self::assertEquals($product1->getCategoryName(),"Tablet Pc");
+     
+   }
+
+   function testHelloService(){
+      $this->app->singleton(HelloService::class,HelloServiceIndonesia::class);
+      $helloService = $this->app->make(HelloService::class);
+      self::assertEquals("Hello Riki",$helloService->hello("Riki"));
+   }
+   
+   function testBidingClosure(){
+
+      $this->app->singleton(HelloService::class,function(){
+         return new HelloServiceIndonesia();
+      });
+
+      $hello1 = $this->app->make(HelloService::class);
+      $hello2 = $this->app->make(HelloService::class);
+
+      self::assertSame($hello1,$hello2);
+      self::assertEquals("Hello Rendi",$hello1->hello("Rendi"));
+
+      self::assertEquals("Hello Riki",$hello2->hello("Riki"));
+   }
 
 }
