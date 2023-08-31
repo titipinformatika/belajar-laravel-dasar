@@ -33,4 +33,28 @@ class RoutingTest extends TestCase
         $this->get('/hello-lagi')
         ->assertSeeText("Hello Rendi Apriandi");
     }
+
+    function testRouteParameter(){
+        $this->get('/product/1')
+        ->assertSeeText("Product : 1");
+
+        $this->get("/products/90/categories/90")
+        ->assertSeeText("Product : 90 Category: 90");
+    }
+
+    function testRouterParameterRegex(){
+        $this->get("/category/90")
+        ->assertSeeText("Category Id : 90");
+
+        $this->get("/category/salah")
+        ->assertSeeText("404 by Titip Informatika");
+    }
+
+    function testRoutingConflict(){
+        $this->get("/conflict/Asep")
+        ->assertSeeText("conflict Asep");
+
+        $this->get("/conflict/riki")
+        ->assertSeeText("conflict riki");
+    }
 }
