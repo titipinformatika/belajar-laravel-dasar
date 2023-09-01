@@ -57,4 +57,9 @@ class RoutingTest extends TestCase
         $this->get("/conflict/riki")
         ->assertSeeText("conflict riki");
     }
+
+    function testNamed(){
+        $this->get("produk/90")->assertSeeText("product/90");
+        $this->get("produk-redirect/test")->assertRedirect("product/test");
+    }
 }
